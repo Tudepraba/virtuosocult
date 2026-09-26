@@ -7,6 +7,7 @@
   --text: #eae6f0;
   --text-dim: #8a8494;
 }
+
 * { box-sizing: border-box; }
 
 body {
@@ -89,21 +90,48 @@ header p {
 }
 .description strong { color: #fff; }
 
+.features-admin {
+  text-align: center;
+  margin-top: 30px;
+}
+.admin-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 15px var(--accent-glow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.admin-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px var(--accent-glow);
+}
+.admin-btn.cancel {
+  background: #2a1f33;
+}
+.admin-btn.danger {
+  background: var(--accent-2);
+}
+
 .features {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 30px;
-  margin: 50px 20px;
+  margin: 40px 20px;
 }
 .feature {
+  position: relative;
   background: linear-gradient(160deg, var(--bg-card), #0d0c11);
   border: 1px solid #2a1f33;
   padding: 22px;
   width: 220px;
   text-align: center;
   border-radius: 12px;
-  cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 .feature:hover {
@@ -123,10 +151,32 @@ header p {
   width: 100px;
   margin-bottom: 10px;
   border-radius: 8px;
+  cursor: pointer;
   filter: grayscale(0.2) contrast(1.05);
   transition: filter 0.3s ease;
 }
 .feature:hover img { filter: grayscale(0) contrast(1.1); }
+
+.feature-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+.feature-actions button {
+  background: none;
+  border: 1px solid #3a2f43;
+  color: var(--text-dim);
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: 0.2s;
+}
+.feature-actions button:hover {
+  border-color: var(--accent);
+  color: #fff;
+}
 
 footer {
   background: #000;
@@ -137,7 +187,7 @@ footer {
   border-top: 1px solid #201823;
 }
 
-/* Modal */
+/* Modal gambar */
 .modal-overlay {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.9);
@@ -153,6 +203,54 @@ footer {
 }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes zoomIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* Modal form CRUD */
+.form-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+}
+.form-overlay.active { display: flex; }
+.form-box {
+  background: var(--bg-card);
+  border: 1px solid #2a1f33;
+  border-radius: 12px;
+  padding: 25px;
+  width: 90%;
+  max-width: 380px;
+  box-shadow: 0 0 40px var(--accent-glow);
+}
+.form-box h3 {
+  margin-top: 0;
+  color: #fff;
+  text-align: center;
+}
+.form-box label {
+  display: block;
+  margin: 12px 0 5px;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+.form-box input,
+.form-box textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #2a1f33;
+  background: #0a0a0d;
+  color: #fff;
+  font-family: inherit;
+}
+.form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
 
 /* Scroll reveal base state (JS toggles .visible) */
 .feature, .description {
