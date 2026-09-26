@@ -1,40 +1,84 @@
+:root {
+  --bg: #0a0a0d;
+  --bg-card: #16141c;
+  --accent: #7c2ffc;
+  --accent-glow: rgba(124, 47, 252, 0.45);
+  --accent-2: #b8003c;
+  --text: #eae6f0;
+  --text-dim: #8a8494;
+}
+
+* { box-sizing: border-box; }
 
 body {
-  background-color: #111;
-  color: #fff;
+  background: radial-gradient(circle at 50% 0%, #1a1420 0%, #0a0a0d 60%);
+  color: var(--text);
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
+
 header {
-  padding: 20px;
+  padding: 30px 20px;
   text-align: center;
-  background-color: #000;
+  background: #000;
+  border-bottom: 1px solid #2a1f33;
+  position: relative;
+}
+header::after {
+  content: "";
+  position: absolute;
+  bottom: -1px; left: 50%;
+  transform: translateX(-50%);
+  width: 120px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
 }
 header h1 {
   font-size: 2.5rem;
-  letter-spacing: 2px;
+  letter-spacing: 4px;
   margin: 0;
+  text-shadow: 0 0 18px var(--accent-glow);
 }
 header p {
   font-size: 1.1rem;
-  color: #aaa;
+  color: var(--text-dim);
+  letter-spacing: 1px;
 }
+
 .hero {
   text-align: center;
-  padding: 40px 20px;
+  padding: 60px 20px;
+  position: relative;
 }
 .hero img {
   max-width: 400px;
   width: 100%;
-  border-radius: 10px;
-  transition: transform 0.2s ease-out;
+  border-radius: 14px;
+  cursor: pointer;
+  filter: drop-shadow(0 0 25px var(--accent-glow)) brightness(0.95);
+  transition: transform 0.25s ease-out, filter 0.3s ease;
+}
+.hero img:hover {
+  filter: drop-shadow(0 0 40px var(--accent-glow)) brightness(1.05);
+}
+.hero img.clicked {
+  animation: pulseClick 0.5s ease;
+}
+@keyframes pulseClick {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(0.94); filter: drop-shadow(0 0 55px var(--accent-2)) brightness(1.2); }
+  100% { transform: scale(1); }
 }
 .hero h2 {
-  margin-top: 20px;
+  margin-top: 25px;
   font-size: 2rem;
   font-weight: normal;
+  letter-spacing: 1px;
+  color: #fff;
+  text-shadow: 0 0 12px var(--accent-glow);
 }
+
 .description {
   padding: 20px;
   max-width: 800px;
@@ -42,38 +86,93 @@ header p {
   text-align: center;
   font-size: 1.1rem;
   line-height: 1.7;
+  color: var(--text-dim);
 }
+.description strong { color: #fff; }
+
 .features {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 30px;
-  margin: 40px 20px;
+  margin: 50px 20px;
 }
 .feature {
-  background-color: #222;
-  border: 1px solid #333;
-  padding: 20px;
+  background: linear-gradient(160deg, var(--bg-card), #0d0c11);
+  border: 1px solid #2a1f33;
+  padding: 22px;
   width: 220px;
   text-align: center;
-  border-radius: 10px;
-  transition: 0.3s;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 .feature:hover {
-  background-color: #333;
+  transform: translateY(-6px);
+  border-color: var(--accent);
+  box-shadow: 0 10px 30px -10px var(--accent-glow);
+}
+.feature.clicked {
+  animation: pulseClick 0.5s ease;
 }
 .feature h3 {
   margin-bottom: 10px;
+  color: #fff;
 }
+.feature p { color: var(--text-dim); font-size: 0.95rem; }
 .feature img {
   width: 100px;
   margin-bottom: 10px;
-  border-radius: 5px;
+  border-radius: 8px;
+  filter: grayscale(0.2) contrast(1.05);
+  transition: filter 0.3s ease;
 }
+.feature:hover img { filter: grayscale(0) contrast(1.1); }
+
 footer {
-  background-color: #000;
+  background: #000;
   text-align: center;
-  padding: 20px;
+  padding: 25px;
   font-size: 0.9rem;
-  color: #666;
+  color: #55505f;
+  border-top: 1px solid #201823;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.25s ease;
+}
+.modal-overlay img {
+  max-width: 90%; max-height: 90%;
+  border-radius: 12px;
+  box-shadow: 0 0 60px var(--accent-glow);
+  animation: zoomIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes zoomIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* Scroll reveal base state (JS toggles .visible) */
+.feature, .description {
+  opacity: 0;
+  transform: translateY(40px) scale(0.97);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.feature.visible, .description.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Scroll progress bar */
+#scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  width: 0%;
+  z-index: 2000;
+  box-shadow: 0 0 10px var(--accent-glow);
 }
