@@ -1,24 +1,30 @@
+// Scroll progress bar
+const progressBar = document.createElement('div');
+progressBar.id = 'scroll-progress';
+document.body.appendChild(progressBar);
 
-// Scroll reveal animation
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.body.scrollHeight - window.innerHeight;
+  const progress = (scrollTop / docHeight) * 100;
+  progressBar.style.width = progress + '%';
+});
+
+// Scroll reveal animation (staggered)
 const revealElements = document.querySelectorAll('.feature, .description');
 
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
     if (entry.isIntersecting) {
-      entry.target.style.opacity = 1;
-      entry.target.style.transform = 'translateY(0)';
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, i * 100);
       observer.unobserve(entry.target);
     }
   });
-}, {
-  threshold: 0.1
-});
+}, { threshold: 0.15 });
 
-revealElements.forEach(el => {
-  el.style.opacity = 0;
-  el.style.transform = 'translateY(40px)';
-  observer.observe(el);
-});
+revealElements.forEach(el => observer.observe(el));
 
 // Parallax effect for hero image
 const heroImg = document.querySelector('.hero img');
@@ -28,34 +34,35 @@ document.addEventListener('mousemove', (e) => {
   heroImg.style.transform = `translate(${x}px, ${y}px)`;
 });
 
-// Modal image viewer
-const images = document.querySelectorAll('.feature img');
-images.forEach(img => {
-  img.style.cursor = 'pointer';
-  img.addEventListener('click', () => {
-    const modal = document.createElement('div');
-    modal.style.position = 'fixed';
-    modal.style.top = 0;
-    modal.style.left = 0;
-    modal.style.width = '100vw';
-    modal.style.height = '100vh';
-    modal.style.background = 'rgba(0,0,0,0.8)';
-    modal.style.display = 'flex';
-    modal.style.justifyContent = 'center';
-    modal.style.alignItems = 'center';
-    modal.style.zIndex = 1000;
+// Klik pada foto baju (hero) -> efek pulse + buka modal
+heroImg.addEventListener('click', () => {
+  heroImg.classList.add('clicked');
+  setTimeout(() => heroImg.classList.remove('clicked'), 500);
+  openModal(heroImg.src);
+});
 
-    const modalImg = document.createElement('img');
-    modalImg.src = img.src;
-    modalImg.style.maxWidth = '90%';
-    modalImg.style.maxHeight = '90%';
-    modalImg.style.borderRadius = '10px';
-    modal.appendChild(modalImg);
-
-    modal.addEventListener('click', () => {
-      document.body.removeChild(modal);
-    });
-
-    document.body.appendChild(modal);
+// Klik pada kartu fitur / gambar simbol -> efek pulse + modal
+document.querySelectorAll('.feature').forEach(card => {
+  card.addEventListener('click', () => {
+    card.classList.add('clicked');
+    setTimeout(() => card.classList.remove('clicked'), 500);
+    const img = card.querySelector('img');
+    if (img) openModal(img.src);
   });
 });
+
+// Modal image viewer
+function openModal(src) {
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+
+  const modalImg = document.createElement('img');
+  modalImg.src = src;
+  modal.appendChild(modalImg);
+
+  modal.addEventListener('click', () => {
+    document.body.removeChild(modal);
+  });
+
+  document.body.appendChild(modal);
+}
